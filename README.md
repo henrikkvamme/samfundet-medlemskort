@@ -65,4 +65,4 @@ apps/web/
 
 ## Repository
 
-GitHub: https://github.com/henrik392/samfundet-medlemskort
+GitHub: https://github.com/henrikkvamme/samfundet-medlemskort
