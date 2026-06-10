@@ -1,0 +1,42 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # The weekly run is the important one: it catches CVEs disclosed for deps you
+  # ALREADY have (the exact failure mode behind the CVE-2025-66478 incident),
+  # not just deps changed in a PR.
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: bun audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      # Report-only for now so it never blocks; flip to a hard fail once the
+      # baseline is clean. The output is the signal.
+      - name: bun audit
+        run: bun audit
+        continue-on-error: true
+
+  trivy:
+    name: Trivy CVE scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Scans the repo (lockfiles + manifests) for known CVEs. Fails the job on
+      # a fixable HIGH/CRITICAL so it shows up red and pages you.
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"

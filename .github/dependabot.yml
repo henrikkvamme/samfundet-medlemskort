@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Bun deps. NOTE: Dependabot bun support is version-updates-only — it does
+  # NOT yet open security-update PRs on CVE disclosure. The weekly schedule
+  # keeps deps current proactively (this is what would have prevented the
+  # CVE-2025-66478 miner incident: a stale Next.js sat in prod). Dependabot
+  # *alerts* still fire for bun via the dependency graph; the CI workflow
+  # (.github/workflows/security.yml) is the active gate.
+  - package-ecosystem: "bun"
+    # Cover BOTH the workspace root and the deployed app. The incident happened
+    # because a fix bumped only the root package.json and missed apps/web.
+    directories:
+      - "/"
+      - "/apps/web"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
