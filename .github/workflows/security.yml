@@ -22,7 +22,7 @@ jobs:
       # Report-only for now so it never blocks; flip to a hard fail once the
       # baseline is clean. The output is the signal.
       - name: bun audit
-        run: bun audit
+        run: bun audit --audit-level=high
         continue-on-error: true
 
   trivy:
