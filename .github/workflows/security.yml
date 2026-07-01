@@ -16,7 +16,7 @@ jobs:
     name: bun audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       # Report-only for now so it never blocks; flip to a hard fail once the
@@ -29,7 +29,7 @@ jobs:
     name: Trivy CVE scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # Scans the repo (lockfiles + manifests) for known CVEs. Fails the job on
       # a fixable HIGH/CRITICAL so it shows up red and pages you.
       - name: Trivy filesystem scan
